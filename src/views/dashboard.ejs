@@ -305,7 +305,15 @@
 
 
     <script>
+        let isProcessing = false; // Variable para verificar si ya se está procesando un QR
+
         function handleQRScan(qrCodeMessage) {
+            // Si ya estamos procesando un QR, no hacer nada
+            if (isProcessing) return;
+
+            // Marcar que estamos procesando un QR
+            isProcessing = true;
+
             const qrData = JSON.parse(qrCodeMessage);
             console.log("QR Detectado:", qrData);
 
@@ -358,6 +366,11 @@
                     confirmButtonText: 'OK'
                 });
             }
+
+            // Esperar 10 segundos antes de permitir un nuevo escaneo
+            setTimeout(() => {
+                isProcessing = false;
+            }, 10000); // 10000 ms = 10 segundos
         }
 
         // Configurar la lectura del QR usando html5-qrcode
