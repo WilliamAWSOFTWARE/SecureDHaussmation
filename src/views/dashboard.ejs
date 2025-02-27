@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard - SB Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="./jss/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Incluir jsQR CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
+
+    <!-- Incluir jQuery desde un CDN (Content Delivery Network) -->
+    <script src="jss/html5-qrcode/html5-qrcode.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="/dashboard">SecureD</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" hidden>
+            <div class="input-group">
+                <!--
+                
+                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
+                    aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i
+                        class="fas fa-search"></i></button>
+                -->
+            </div>
+        </form>
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="/user/config">Configuracion</a></li>
+                    <li><a class="dropdown-item" href="/user/hist">Historial de usuario</a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="dropdown-item" href="/logout">Cerrar Sesion</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+
+
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="/dashboard">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Personas</div>
+                        <a class="nav-link collapsed" href="" data-bs-toggle="collapse"
+                            data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Entradas
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/familias">Familias</a>
+                                <a class="nav-link" href="/personas">Personas</a>
+                                <a class="nav-link" href="/visitantes">Visitantes</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+                            aria-expanded="false" aria-controls="collapsePages">
+                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                            Historial
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link collapsed" href="/authentic" data-bs-toggle="collapse"
+                                    data-bs-target="#pagesCollapseAuth" aria-expanded="false"
+                                    aria-controls="pagesCollapseAuth">
+                                    Autenticacion
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
+                                    data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="/qrcodes">QR Codes</a>
+                                        <a class="nav-link" href="/pr" hidden>Paso Rapido</a>
+                                        <a class="nav-link" href="/magtag" hidden>Magnetic Tag</a>
+                                    </nav>
+                                </div>
+
+                                <a class="nav-link collapsed" href="/authentic" data-bs-toggle="collapse"
+                                    data-bs-target="#pagos" aria-expanded="false" aria-controls="pagos">
+                                    Contabilidad
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagos" aria-labelledby="headingOne"
+                                    data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="/pagos">Pago</a>
+                                        <a class="nav-link" href="/pr" hidden>Paso Rapido</a>
+                                        <a class="nav-link" href="/magtag" hidden>Magnetic Tag</a>
+                                    </nav>
+                                </div>
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                                    data-bs-target="#pagesCollapseError" aria-expanded="false"
+                                    aria-controls="pagesCollapseError" hidden>
+                                    Error
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse " id="pagesCollapseError" aria-labelledby="headingOne"
+                                    data-bs-parent="#sidenavAccordionPages" hidden>
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="401.html">401 Page</a>
+                                        <a class="nav-link" href="404.html">404 Page</a>
+                                        <a class="nav-link" href="500.html">500 Page</a>
+                                    </nav>
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="sb-sidenav-menu-heading" hidden>Addons</div>
+                        <a class="nav-link" href="charts.html" hidden>
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area" hidden></i></div>
+                            Charts
+                        </a>
+                        <a class="nav-link" href="tables.html" hidden>
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Tables
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Usuario:</div>
+                    <div id="usuario"></div>
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <div class="container-fluid px-4">
+
+
+                        <!-- Card para la vista en vivo -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h1 class="mt-4">Dashboard</h1>
+                                <ol class="breadcrumb mb-4">
+                                    <li class="breadcrumb-item active">Core>Dashboard</li>
+                                </ol>
+                            </div>
+                            <div class="col-md-6 pt-4">
+                                <div class="card mb-4">
+                                    <!-- Título de la tarjeta -->
+                                    <div class="card-header d-flex align-items-center">
+                                        <i class="fas fa-video me-1"></i>
+                                        <span>Escaner QR</span>
+                                    </div>
+
+                                    <!-- Cuerpo de la tarjeta con video -->
+                                    <div class="card-body text-center" id="video-container">
+                                        <div id="qr-reader"></div>
+
+                                        <!-- Botón para detener la lectura del QR -->
+
+
+                                        <!-- Área para mostrar el estado -->
+                                        <p id="status">Escaneando QR...</p>
+                                        <!-- Canvas para procesar la imagen -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Otras tarjetas y contenido de la página -->
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="card mb-4">
+                            <!-- Encabezado de la tarjeta -->
+                            <div class="card-header d-flex align-items-center">
+                                <i class="fas fa-table me-1"></i>
+                                <span>Visitantes</span>
+
+                                <!-- Botón alineado a la derecha -->
+
+                            </div>
+
+                            <!-- Cuerpo de la tarjeta -->
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-light table-hover">
+                                        <thead class="table-primary text-center">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Código</th>
+                                                <th>Nombres</th>
+                                                <th>Apellidos</th>
+                                                <th>Telefono</th>
+                                                <th>Estado</th>
+                                                <th>Accion</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="personasTableBody" class="text-center">
+                                            <!-- Aquí se agregarán dinámicamente las filas -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Haussmation</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+    <script>
+        //Cargar tabla de personas
+        async function cargarpersonas() {
+            try {
+                const response = await fetch('/personas_t'); // Llama al backend
+                const personas = await response.json();
+                //console.log(personas);
+
+                const tableBody = document.getElementById('personasTableBody');
+                tableBody.innerHTML = '';
+
+                personas.forEach(persona => {
+                    const row = `
+                <tr>
+                    <td>${persona.id}</td>
+                    <td>${persona.codigo_familia}</td>
+                    <td>${persona.nombres}</td>
+                    <td>${persona.apellidos || ''}</td>
+                    <td>${persona.telefono || ''}</td>
+                    <td>${persona.estado || ''}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm editar-btn" onclick="llenarupdate('${persona.codigo_familia}','${persona.nombres}','${persona.apellidos}','${persona.telefono}','${persona.email}', '${persona.id}')" data-bs-toggle="modal" data-bs-target="#modalEditarpersona"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-danger btn-sm eliminar-btn" data-id="" onclick="eliminarpersona('${persona.id}')"><i class="bi bi-trash3"></i></button>
+                    </td>
+                </tr>
+            `;
+                    tableBody.innerHTML += row;
+                });
+
+            } catch (error) {
+                console.error('Error al cargar las personas:', error);
+            }
+        }
+
+
+        // Cargar las personas cuando la página se cargue
+        document.addEventListener('DOMContentLoaded', cargarpersonas);
+        $(document).ready(function () {
+            const nombre = localStorage.getItem('nombre');
+            document.getElementById('usuario').innerHTML = nombre;
+            // El código dentro de esta función se ejecutará cuando el DOM esté completamente cargado
+            //console.log("Documento listo");
+            // Aquí puedes poner todo tu código de inicialización
+        });
+
+    </script>
+
+
+
+    <script>
+        function handleQRScan(qrCodeMessage) {
+            const qrData = JSON.parse(qrCodeMessage);
+            console.log("QR Detectado:", qrData);
+
+            // Verifica si los datos del QR son válidos
+            if (qrData.id_usuario && qrData.codigo_familia && qrData.hora_generacion && qrData.hora_vencimiento) {
+                // Enviar los datos al backend
+                fetch("http://localhost:3000/validarqr", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(qrData),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === "Visitante registrado exitosamente.") {
+                            // SweetAlert para mostrar mensaje de éxito
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'QR válido',
+                                text: 'Visitante registrado exitosamente.',
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            // SweetAlert para mostrar mensaje de error
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'QR no válido o expirado',
+                                text: 'El código QR no es válido o ha expirado.',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error al enviar los datos:", error);
+                        // SweetAlert para mostrar un mensaje de error en caso de problemas al registrar
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error al registrar el visitante.',
+                            confirmButtonText: 'OK'
+                        });
+                    });
+            } else {
+                // SweetAlert para mostrar que los datos del QR son incorrectos
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Datos del QR incorrectos',
+                    text: 'Los datos del QR no son válidos.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        // Configurar la lectura del QR usando html5-qrcode
+        const qrCodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 250 });
+
+        // Iniciar el escaneo de QR
+        qrCodeScanner.render(handleQRScan);
+
+        // Detener el escaneo al presionar el botón
+        document.getElementById("stopScanBtn").addEventListener("click", () => {
+            qrCodeScanner.clear();
+            document.getElementById("status").textContent = "Escaneo detenido.";
+        });
+    </script>
+</body>
+
+</html>

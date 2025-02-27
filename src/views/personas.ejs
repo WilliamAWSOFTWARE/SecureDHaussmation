@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard - SB Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="./jss/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Incluir jQuery desde un CDN (Content Delivery Network) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="/dashboard">SecureD</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" hidden>
+            <div class="input-group">
+                <!--
+                
+                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
+                    aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i
+                        class="fas fa-search"></i></button>
+                -->
+            </div>
+        </form>
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="/user/config">Configuracion</a></li>
+                    <li><a class="dropdown-item" href="/user/hist">Historial de usuario</a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="dropdown-item" href="/logout">Cerrar Sesion</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+
+    <!-- Modal -->
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Personas</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form id="personaForm">
+                        <div class="row g-3">
+                            <!-- Código -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="codigo" name="codigo"
+                                        placeholder="Código" required>
+                                    <label for="codigo">Código de Familia</label>
+                                </div>
+                            </div>
+
+                            <!-- Nombre de persona -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="nombrepersona" name="nombrepersona"
+                                        placeholder="Nombre de persona" required>
+                                    <label for="nombrepersona">Nombre de persona</label>
+                                </div>
+                            </div>
+
+                            <!-- apellidos -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="apellidos" name="apellidos"
+                                        placeholder="apellidos" required>
+                                    <label for="apellidos">Apellidos</label>
+                                </div>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control" id="telefono" name="telefono"
+                                        placeholder="Teléfono">
+                                    <label for="telefono">Teléfono</label>
+                                </div>
+                            </div>
+
+                            <!-- EMAIL -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="email" name="email"
+                                        placeholder="Dirección">
+                                    <label for="email">Dirección</label>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-6">
+                                <select class="form-select" aria-label="Default select example" id="propiedad">
+                                    <option selected value="Propietario">Propietario</option>
+                                    <option value="Solar">Solar</option>
+                                    <option value="Inquilino">Inquilino</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <select class="form-select" aria-label="Default select example" id="estado">
+                                    <option selected>Activo</option>
+                                    <option value="1">Desactivado</option>
+                                </select>
+                            </div>
+
+
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" id="guardarpersona">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Modal para Editar persona -->
+    <div class="modal fade" id="modalEditarpersona" tabindex="-1" aria-labelledby="modalEditarpersonaLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header  bg-warning">
+                    <h1 class="modal-title fs-5" id="modalEditarpersonaLabel">Editar persona</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form id="editarpersonaForm">
+                        <div class="row g-3">
+
+                            <!-- Código p -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="ecodigop" name="ecodigop"
+                                        placeholder="Código" disabled>
+                                    <label for="ecodigop">Código persona</label>
+                                </div>
+                            </div>
+
+
+                            <!-- Código -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="ecodigo" name="ecodigo"
+                                        placeholder="Código" required>
+                                    <label for="ecodigo">Código de Familia</label>
+                                </div>
+                            </div>
+
+                            <!-- Nombre de persona -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="enombrepersona" name="enombrepersona"
+                                        placeholder="Nombre de persona" required>
+                                    <label for="enombrepersona">Nombre de persona</label>
+                                </div>
+                            </div>
+
+                            <!-- apellidos -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="eapellidos" name="eapellidos"
+                                        placeholder="Apellidos" required>
+                                    <label for="eapellidos">Apellidos</label>
+                                </div>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control" id="etelefono" name="etelefono"
+                                        placeholder="Teléfono">
+                                    <label for="etelefono">Teléfono</label>
+                                </div>
+                            </div>
+
+                            <!-- EMAIL -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="eemail" name="eemail"
+                                        placeholder="Email">
+                                    <label for="eemail">email</label>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-6">
+                                <select class="form-select" aria-label="Default select example" id="epropiedad">
+                                    <option selected value="Propietario">Propietario</option>
+                                    <option value="Solar">Solar</option>
+                                    <option value="Inquilino">Inquilino</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <select class="form-select" aria-label="Default select example" id="eestado">
+                                    <option selected value="Activo">Activo</option>
+                                    <option value="Desactivado">Desactivado</option>
+                                </select>
+                            </div>
+
+
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" id="guardarEdicionpersona" onclick="enviarupdate()"
+                        data-bs-dismiss="modal">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="/dashboard">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Personas</div>
+                        <a class="nav-link collapsed" href="" data-bs-toggle="collapse"
+                            data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Entradas
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/familias">Familias</a>
+                                <a class="nav-link" href="/personas">Personas</a>
+                                <a class="nav-link" href="/visitantes">Visitantes</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+                            aria-expanded="false" aria-controls="collapsePages">
+                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                            Historial
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                <a class="nav-link collapsed" href="/authentic" data-bs-toggle="collapse"
+                                    data-bs-target="#pagesCollapseAuth" aria-expanded="false"
+                                    aria-controls="pagesCollapseAuth">
+                                    Autenticacion
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
+                                    data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="/qrcodes">QR Codes</a>
+                                        <a class="nav-link" href="/pr" hidden>Paso Rapido</a>
+                                        <a class="nav-link" href="/magtag" hidden>Magnetic Tag</a>
+                                    </nav>
+                                </div>
+
+                                <a class="nav-link collapsed" href="/authentic" data-bs-toggle="collapse"
+                                    data-bs-target="#pagos" aria-expanded="false" aria-controls="pagos">
+                                    Contabilidad
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagos" aria-labelledby="headingOne"
+                                    data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="/pagos">Pago</a>
+                                        <a class="nav-link" href="/pr" hidden>Paso Rapido</a>
+                                        <a class="nav-link" href="/magtag" hidden>Magnetic Tag</a>
+                                    </nav>
+                                </div>
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                                    data-bs-target="#pagesCollapseError" aria-expanded="false"
+                                    aria-controls="pagesCollapseError" hidden>
+                                    Error
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse " id="pagesCollapseError" aria-labelledby="headingOne"
+                                    data-bs-parent="#sidenavAccordionPages" hidden>
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="401.html">401 Page</a>
+                                        <a class="nav-link" href="404.html">404 Page</a>
+                                        <a class="nav-link" href="500.html">500 Page</a>
+                                    </nav>
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="sb-sidenav-menu-heading" hidden>Addons</div>
+                        <a class="nav-link" href="charts.html" hidden>
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area" hidden></i></div>
+                            Charts
+                        </a>
+                        <a class="nav-link" href="tables.html" hidden>
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Tables
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Usuario:</div>
+                    <div id="usuario"></div>
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Personas</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Entradas>Personas</li>
+                    </ol>
+                    <div class="row">
+
+                        <div class="card mb-4">
+                            <!-- Encabezado de la tarjeta -->
+                            <div class="card-header d-flex align-items-center">
+                                <i class="fas fa-table me-1"></i>
+                                <span>Personas</span>
+
+                                <!-- Botón alineado a la derecha -->
+                                <div class="ms-auto">
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">
+                                        <i class="bi bi-person-add"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Cuerpo de la tarjeta -->
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-light table-hover">
+                                        <thead class="table-primary text-center">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Código</th>
+                                                <th>Nombres</th>
+                                                <th>Apellidos</th>
+                                                <th>Telefono</th>
+                                                <th>Estado</th>
+                                                <th>Accion</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="personasTableBody" class="text-center">
+                                            <!-- Aquí se agregarán dinámicamente las filas -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Haussmation</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+    <script>
+        //Cargar tabla de personas
+        async function cargarpersonas() {
+            try {
+                const response = await fetch('/personas_t'); // Llama al backend
+                const personas = await response.json();
+                //console.log(personas);
+
+                const tableBody = document.getElementById('personasTableBody');
+                tableBody.innerHTML = '';
+
+                personas.forEach(persona => {
+                    const row = `
+                <tr>
+                    <td>${persona.id}</td>
+                    <td>${persona.codigo_familia}</td>
+                    <td>${persona.nombres}</td>
+                    <td>${persona.apellidos || ''}</td>
+                    <td>${persona.telefono || ''}</td>
+                    <td>${persona.estado || ''}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm editar-btn" onclick="llenarupdate('${persona.codigo_familia}','${persona.nombres}','${persona.apellidos}','${persona.telefono}','${persona.email}', '${persona.id}')" data-bs-toggle="modal" data-bs-target="#modalEditarpersona"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-danger btn-sm eliminar-btn" data-id="" onclick="eliminarpersona('${persona.id}')"><i class="bi bi-trash3"></i></button>
+                    </td>
+                </tr>
+            `;
+                    tableBody.innerHTML += row;
+                });
+
+            } catch (error) {
+                console.error('Error al cargar las personas:', error);
+            }
+        }
+
+
+        // Función para editar una persona
+        function llenarupdate(persona_c, persona_n, persona_a, persona_t, persona_e, persona_id) {
+            //alert(`Editar persona con ID: ${persona_c}`);
+            document.getElementById('ecodigop').value = persona_id;
+            document.getElementById('ecodigo').value = persona_c;
+            document.getElementById('enombrepersona').value = persona_n;
+            document.getElementById('eapellidos').value = persona_a;
+            document.getElementById('etelefono').value = persona_t;
+            document.getElementById('eemail').value = persona_e;
+
+            // Aquí puedes abrir un modal o formulario para editar los datos
+        }
+
+        function enviarupdate() {
+            const persona = {
+                codigo: document.getElementById('ecodigo').value,
+                nombres: document.getElementById('enombrepersona').value,
+                apellidos: document.getElementById('eapellidos').value,
+                email: document.getElementById('eemail').value,
+                estado: document.getElementById('eestado').value,
+                propiedad: document.getElementById('epropiedad').value,
+                telefono: document.getElementById('etelefono').value,
+                id: document.getElementById('ecodigop').value
+            };
+
+            //console.log("Nueva persona:", persona);
+
+            // Enviar los datos con Axios
+            axios.post('/edit-persona', persona)
+                .then(response => {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "persona editada",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    cargarpersonas();
+
+                })
+                .catch(error => {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: "Error al editar persona",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    console.error("Error al agregar persona", error);
+                });
+        }
+
+        // Función para elimninar una persona
+        function eliminarpersona(persona_c) {
+            const persona = {
+                codigo: persona_c
+            };
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                title: "Esta seguro?",
+                text: "No podra revertir esta accion!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si, eliminar!",
+                cancelButtonText: "No, cancelar!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post('/delete-persona', persona)
+                        .then(response => {
+                            swalWithBootstrapButtons.fire({
+                                title: "Borrado!",
+                                text: "Los datos han sido borrados correctamente.",
+                                icon: "success"
+                            });
+                            cargarpersonas();
+
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "error",
+                                title: "Error al editar persona",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            console.error("Error al agregar persona", error);
+                        });
+
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire({
+                        title: "Cancelado",
+                        text: "No se ha borrado nada :)",
+                        icon: "error"
+                    });
+                }
+            });
+            //console.log("Nueva persona:", persona);
+
+            // Enviar los datos con Axios
+
+        }
+
+
+        // Funcion poara agregar una persona
+        document.getElementById('guardarpersona').addEventListener('click', function () {
+            const persona = {
+                codigo: document.getElementById('codigo').value,
+                nombres: document.getElementById('nombrepersona').value,
+                apellidos: document.getElementById('apellidos').value,
+                email: document.getElementById('email').value,
+                estado: document.getElementById('estado').value,
+                propiedad: document.getElementById('propiedad').value,
+                telefono: document.getElementById('telefono').value
+            };
+
+            console.log("Nueva persona:", persona);
+
+            // Enviar los datos con Axios
+            axios.post('/agregar-persona', persona)
+                .then(response => {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "persona agregada correctamente",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    cargarpersonas();
+
+                })
+                .catch(error => {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: "Error al agregar persona",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    console.error("Error al agregar persona", error);
+                });
+        });
+
+        // Cargar las personas cuando la página se cargue
+        document.addEventListener('DOMContentLoaded', cargarpersonas);
+        $(document).ready(function () {
+            const nombre = localStorage.getItem('nombre');
+            document.getElementById('usuario').innerHTML = nombre;
+            // El código dentro de esta función se ejecutará cuando el DOM esté completamente cargado
+            //console.log("Documento listo");
+            // Aquí puedes poner todo tu código de inicialización
+        });
+
+    </script>
+</body>
+
+</html>
